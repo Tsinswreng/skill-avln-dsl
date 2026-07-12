@@ -353,5 +353,28 @@ public partial class ViewUserProfile: AppViewBase<Ctx>{
 ]
 
 #H[再次強調所該做與不該做][
+	#H[所該做][
+		- 用`.A()`、`SetContent()`、`SetChild()` 等擴展方法來組織控件樹
+		- 加入控件樹時、在 lambda 中用 `o.Xxx = Yyy` 的方式初始化控件
+		- 代碼塊的嵌套層級要與實際控件樹結構保持一致
+		- 優先使用 `GridStack` 或嵌套 `GridStack` 組織佈局
+		- 使用 AOT 兼容的綁定寫法；綁定源是 `Ctx` 時優先用 `Ctx.Bind(...)`
+		- View 中的耗時初始化放到 `OnLoaded()`，不要阻塞 UI 創建
+		- 樣式有重複時抽到 `Styles` 中，並用 `Cls` 常量管理類名
+		- UI 文本走 I18n；字體大小、間距等優先走項目配置或統一常量
+		- 如果項目缺少本 skill 依賴的基礎設施，如 `IMk<>`、`Todo.I18n()`、綁定輔助器、View/Vm 基類，立即請示用戶
+	]
 
+	#H[所不該做][
+		- 不要手動寫 `panel.Children.Add(...)`；能用 `.A()` 的地方一律用 `.A()`
+		- 不要直接給 `ContentControl.Content`、`Border.Child` 等賦值；分別用 `SetContent()`、`SetChild()`
+		- 不要用 `new Binding("...")` 或其他字符串路徑綁定
+		- 不要在 ViewModel 層做視圖跳轉、操作 View 控件、耦合 View 層細節
+		- 不要把耗時操作寫進 View 構造器、同步按鈕事件、或直接阻塞 UI 線程
+		- 不要硬編碼 UI 文本、字體大小、樣式類名
+		- 不要爲了“拆函數而拆函數”；只有在 Render 嵌套過深或子區塊相對獨立時才抽 `MkXxx()`
+		- 不要手動設計 `GridStack` 子項的行號列號；讓其自動分配
+		- 不要在 `Xxx.cs` 中寫函數實現；聲明與實現必須分離到 `Xxx.Impl.cs`
+		- 不要在基礎設施是否存在、命名是否一致、規範是否適配當前項目這些問題上自行猜測；有疑問立即停下來問用戶
+	]
 ]
