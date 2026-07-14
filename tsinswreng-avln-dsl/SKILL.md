@@ -160,14 +160,14 @@ public partial class ViewUserProfile: AppViewBase<Ctx>{
 	//關鍵控件包括:
 	//涉及輸入操作交互(如按鈕,輸入框),信息展示的(如文本框);
 	//子模塊/子UserControl(其他的`ViewXxx`)。
-	//聲明關鍵控件時、可使用具體類型(如 `public TextBox? CtrlCnt1`;)
+	//聲明關鍵控件時、可使用具體類型(如 `public TextBox? _CtrlCnt1`;)
 	//若暫時未確定類型也可以寫`Control?`或`object?`。
 	//聲明爲可空、不需要寫get;set;
 	///(寫註釋說明這個控件)
-	public Control? CtrlCnt1;
+	public Control? _CtrlCnt1;
 	
 	///點擊按鈕後增加Cnt1的值
-	public Button? BtnAdd;
+	public Button? _BtnAdd;
 	
 	//初始化視圖
 	public partial void Render();
@@ -228,7 +228,7 @@ public partial class ViewUserProfile: AppViewBase<Ctx>{
 		//能用.A()方法的就禁止手動.Children.Add
 		//匿名函數中的形參要短、以一到兩個字母爲宜
 		Root.A(new TextBox(), t=>{
-			CtrlCnt1 = t;//初始化關鍵控件這樣寫
+			_CtrlCnt1 = t;//初始化關鍵控件這樣寫
 			t.AcceptsReturn = true;
 			//下面展示綁定寫法。須用AOT兼容的綁定寫法。不准用new Binding(字符串)
 			//功能最全但不是最常用的寫法:
@@ -253,7 +253,7 @@ public partial class ViewUserProfile: AppViewBase<Ctx>{
 			
 			//所有綁定 不需要顯示指定BindingMode的 就別寫BindingMode !
 		}).A(new Button(), b=>{
-			BtnAdd = b;//初始化關鍵控件
+			_BtnAdd = b;//初始化關鍵控件
 			//添加樣式類名
 			b.Classes.Add(Cls.MenuBtn);
 			//初始化ContentControl.Content時使用SetContent擴展方法、
@@ -372,6 +372,7 @@ public partial class ViewUserProfile: AppViewBase<Ctx>{
 - 樣式有重複時抽到 `Styles` 中，並用 `Cls` 常量管理類名
 - UI 文本走 I18n；字體大小、間距等優先走項目配置或統一常量
 - 如果項目缺少本 skill 依賴的基礎設施，如 `IMk<>`、`Todo.I18n()`、綁定輔助器、View/Vm 基類，立即請示用戶
+- 在ViewXxx中把關鍵控件提到public成員。
 
 ### 所不該做
 
