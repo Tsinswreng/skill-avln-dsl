@@ -1,23 +1,21 @@
-#import "@preview/tsinswreng-auto-heading:0.1.0": auto-heading
-#let H = auto-heading;
-\-\-\-
+---
 
 name: tsinswreng-avln-dsl
 
 description: Avalonia Avln.Dsl庫 UI寫法規範。開發Avalonia項目時應閱讀此skill
 
-\-\-\-
+---
 
+## 命名規範
 
-#H[命名規範][
-	- 視圖(View)用 View前綴
-	- 視圖模型(ViewModel) 用Vm前綴
-]
+- 視圖(View)用 View前綴
+- 視圖模型(ViewModel) 用Vm前綴
 
+## 文件位置
 
-#H[文件位置][
 例:
-````
+
+```
 MyProj/Views/
 	Login/
 		ViewLogin.cs
@@ -29,20 +27,18 @@ MyProj/Views/
 		ViewUserProfile.Impl.cs
 		VmUserProfile.cs
 		VmUserProfile.Impl.cs
-````
+```
 
 - ViewXxx和VmXxx須同時放在名为Xxx的文件夾下
 - 遵守 《聲明與實現分離》的規範、類型和所有函數都聲明爲partial、`Xxx.cs`中不寫函數實現、函數實現都寫在`Xxx.Impl.cs`中
 
-]
+## Vm規範
 
-
-#H[Vm規範][
-Vm即ViewModel。
-示例代碼:
+Vm即ViewModel。 示例代碼:
 
 `VmUserProfile.cs`:
-````cs
+
+```cs
 namespace MyProj.Views.UserProfile;
 using Ctx = VmUserProfile;
 ///記得在這裏寫註釋
@@ -89,10 +85,10 @@ public partial class VmUserProfile: ViewModelBase, IMk<Ctx>{
 	///記得在這裏寫註釋
 	public partial Task<nil> CallService(CT Ct);
 }
-````
-
+```
 
 `VmUserProfile.Impl.cs`:
+
 ```cs
 namespace MyProj.Views.UserProfile;
 /// .Impl.cs專門用來寫函數實現
@@ -132,17 +128,15 @@ public partial class VmUserProfile{
 }
 ```
 
-注意:`InInited`, `CheckInit()`, 應當在Vm的基類中定義;
-`IMk<>`接口應當在項目中定義。若項目未定義則應請示用戶
+注意:`InInited`, `CheckInit()`, 應當在Vm的基類中定義; `IMk<>`接口應當在項目中定義。若項目未定義則應請示用戶
 
-]
+## View規範
 
+使用 `Tsinswreng.Avln.Dsl` 庫。
 
-#H[View規範][
-	使用 `Tsinswreng.Avln.Dsl` 庫。
-	
 `ViewUserProfile.cs`:
-````cs
+
+```cs
 namespace MyProj.Views.UserProfile;
 using Tsinswreng.Avln.Dsl;
 using Tsinswreng.Avln.Grid;
@@ -191,10 +185,10 @@ public partial class ViewUserProfile: AppViewBase<Ctx>{
 	
 	public partial Control MkBar();
 }
-````
-
+```
 
 `ViewUserProfile.Impl.cs`:
+
 ```cs
 namespace MyProj.Views.UserProfile;
 using Tsinswreng.Avln.Dsl;
@@ -363,33 +357,31 @@ public partial class ViewUserProfile: AppViewBase<Ctx>{
 }
 ```
 
-注:
-`Todo.I18n()`,`GUT`別名應在項目中定義、如未定義則應請示用戶
-]
+注: `Todo.I18n()`,`GUT`別名應在項目中定義、如未定義則應請示用戶
 
-#H[再次強調所該做與不該做][
-	#H[所該做][
-		- 用`.A()`、`SetContent()`、`SetChild()` 等擴展方法來組織控件樹
-		- 加入控件樹時、在 lambda 中用 `o.Xxx = Yyy` 的方式初始化控件
-		- 代碼塊的嵌套層級要與實際控件樹結構保持一致
-		- 優先使用 `GridStack` 或嵌套 `GridStack` 組織佈局
-		- 使用 AOT 兼容的綁定寫法；綁定源是 `Ctx` 時優先用 `Ctx.Bind(...)`
-		- View 中的耗時初始化放到 `OnLoaded()`，不要阻塞 UI 創建
-		- 樣式有重複時抽到 `Styles` 中，並用 `Cls` 常量管理類名
-		- UI 文本走 I18n；字體大小、間距等優先走項目配置或統一常量
-		- 如果項目缺少本 skill 依賴的基礎設施，如 `IMk<>`、`Todo.I18n()`、綁定輔助器、View/Vm 基類，立即請示用戶
-	]
+## 再次強調所該做與不該做
 
-	#H[所不該做][
-		- 不要手動寫 `panel.Children.Add(...)`；能用 `.A()` 的地方一律用 `.A()`
-		- 不要直接給 `ContentControl.Content`、`Border.Child` 等賦值；分別用 `SetContent()`、`SetChild()`
-		- 不要用 `new Binding("...")` 或其他字符串路徑綁定
-		- 不要在 ViewModel 層做視圖跳轉、操作 View 控件、耦合 View 層細節
-		- 不要把耗時操作寫進 View 構造器、同步按鈕事件、或直接阻塞 UI 線程
-		- 不要硬編碼 UI 文本、字體大小、樣式類名
-		- 不要爲了“拆函數而拆函數”；只有在 Render 嵌套過深或子區塊相對獨立時才抽 `MkXxx()`
-		- 不要手動設計 `GridStack` 子項的行號列號；讓其自動分配
-		- 不要在 `Xxx.cs` 中寫函數實現；聲明與實現必須分離到 `Xxx.Impl.cs`
-		- 不要在基礎設施是否存在、命名是否一致、規範是否適配當前項目這些問題上自行猜測；有疑問立即停下來問用戶
-	]
-]
+### 所該做
+
+- 用`.A()`、`SetContent()`、`SetChild()` 等擴展方法來組織控件樹
+- 加入控件樹時、在 lambda 中用 `o.Xxx = Yyy` 的方式初始化控件
+- 代碼塊的嵌套層級要與實際控件樹結構保持一致
+- 優先使用 `GridStack` 或嵌套 `GridStack` 組織佈局
+- 使用 AOT 兼容的綁定寫法；綁定源是 `Ctx` 時優先用 `Ctx.Bind(...)`
+- View 中的耗時初始化放到 `OnLoaded()`，不要阻塞 UI 創建
+- 樣式有重複時抽到 `Styles` 中，並用 `Cls` 常量管理類名
+- UI 文本走 I18n；字體大小、間距等優先走項目配置或統一常量
+- 如果項目缺少本 skill 依賴的基礎設施，如 `IMk<>`、`Todo.I18n()`、綁定輔助器、View/Vm 基類，立即請示用戶
+
+### 所不該做
+
+- 不要手動寫 `panel.Children.Add(...)`；能用 `.A()` 的地方一律用 `.A()`
+- 不要直接給 `ContentControl.Content`、`Border.Child` 等賦值；分別用 `SetContent()`、`SetChild()`
+- 不要用 `new Binding("...")` 或其他字符串路徑綁定
+- 不要在 ViewModel 層做視圖跳轉、操作 View 控件、耦合 View 層細節
+- 不要把耗時操作寫進 View 構造器、同步按鈕事件、或直接阻塞 UI 線程
+- 不要硬編碼 UI 文本、字體大小、樣式類名
+- 不要爲了“拆函數而拆函數”；只有在 Render 嵌套過深或子區塊相對獨立時才抽 `MkXxx()`
+- 不要手動設計 `GridStack` 子項的行號列號；讓其自動分配
+- 不要在 `Xxx.cs` 中寫函數實現；聲明與實現必須分離到 `Xxx.Impl.cs`
+- 不要在基礎設施是否存在、命名是否一致、規範是否適配當前項目這些問題上自行猜測；有疑問立即停下來問用戶
