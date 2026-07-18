@@ -144,6 +144,11 @@ using Ctx = VmUserProfile;
 ///記得在這裏寫註釋
 public partial class ViewUserProfile: AppViewBase<Ctx>{
 	
+	///記得在這裏寫註釋
+	/// 轉換器也要在Decl中聲明 但不實現。
+	/// 獨立出來可方便測試。
+	public static IValConvtrWithErr ConvIntToCornerRadius;
+	
 	//View必須有且現有一個無參構造器
 	public partial ViewSample();
 	
@@ -197,6 +202,12 @@ using Ctx = VmUserProfile;
 ///記得在這裏寫註釋
 public partial class ViewUserProfile: AppViewBase<Ctx>{
 	
+	///在靜態構造函數中初始化靜態字段如轉換器
+	public static ViewUserProfile(){
+		ConvIntToCornerRadius = new FnConvtr<int, CornerRadius>(cnt=>{
+			return new CornerRadius(cnt);
+		});
+	}
 	
 	public partial ViewSample(){
 		Ctx = App.DiOrMk<Ctx>();
@@ -345,9 +356,7 @@ public partial class ViewUserProfile: AppViewBase<Ctx>{
 				//可以在Style中設置綁定
 				x=>x.CornerRadius, CBE.Mk<Ctx>(
 					x=>x.Cnt1,
-					Converter: new FnConvtr<int, CornerRadius>(cnt=>{
-						return new CornerRadius(cnt);
-					})
+					Converter: ConvIntToCornerRadius
 				)
 			)
 		)
