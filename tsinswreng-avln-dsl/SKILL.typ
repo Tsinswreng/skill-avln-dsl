@@ -390,6 +390,7 @@ public partial class ViewUserProfile: AppViewBase<Ctx>{
 		- UI 文本走 I18n；字體大小、間距等優先走項目配置或統一常量
 		- 如果項目缺少本 skill 依賴的基礎設施，如 `IMk<>`、`Todo.I18n()`、綁定輔助器、View/Vm 基類，立即請示用戶
 		- 在ViewXxx中把關鍵控件提到public成員。
+		- 聲明中的註釋要非常詳細、把具體功能樣式交互流程等都寫清楚。讓人看到Decl就像看到了文檔一樣。
 	]
 
 	#H[所不該做][
